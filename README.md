@@ -1,7 +1,7 @@
-El proyecto está dividido en dos partes principales:
+# El proyecto está dividido en dos partes principales:
 
-Frontend:
-
+## Frontend:
+```
 frontend/
 ├── index.html
 └── assets/
@@ -11,9 +11,11 @@ frontend/
     │   └── script.js
     └── images/
         └── logo.png
+```
 
-Backend:
-
+## Backend:
+```
 backend/
 └── db/
     └── datos.db
+```
