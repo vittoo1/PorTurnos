@@ -1,0 +1,11 @@
+        /* Variables globales con el selector "root" 
+        para refereir al elemento raiz del html
+        y en este caso definir colores*/
+        :root {
+            --color-amarillo:#F1B23B;
+            --color-rosa:    #E83151;
+            --color-azul:    #4A8FE7;
+            --color-verde:   #63C841;
+            --color-negroA:  #0D1B1E;
+        }
+
