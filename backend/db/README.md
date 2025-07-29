@@ -2,17 +2,18 @@
 
 ## Contexto del Proyecto
 
-**Por Turnos** es una plataforma de comercio electrónico C2C (consumer-to-consumer) especializada en juegos de mesa nuevos y usados. En este marketplace, los usuarios pueden vender, comprar, arrendar y revender juegos de forma segura, fomentando una comunidad lúdica. Además, la plataforma contará con un blog con artículos sobre juegos, reseñas y consejos de compra.
+**Por Turnos** es una plataforma de comercio electrónico C2C (consumer-to-consumer) especializada en juegos de mesa nuevos y usados. En este marketplace, los usuarios pueden vender, comprar y revender juegos de forma segura, fomentando una comunidad lúdica. Además, la plataforma cuenta con un blog con artículos sobre juegos, reseñas y consejos de compra.
 
 ---
 
 ## Objetivos de la Base de Datos
 
 - Gestionar la información de los usuarios (clientes/vendedores).
-- Registrar y administrar productos (juegos).
-- Controlar las transacciones de venta y arriendo.
+- Registrar y administrar productos (juegos de mesa).
+- Almacenar imágenes de productos para visualización en el frontend.
 - Organizar publicaciones del blog y sus autores.
-- Facilitar la consulta eficiente de productos, usuarios y contenido del blog.
+- Registrar puntuaciones de usuarios luego de transacciones.
+- Facilitar la consulta eficiente de productos, clientes y contenido del blog.
 
 ---
 
@@ -20,103 +21,111 @@
 
 ### 👤 CLIENTES
 
-- ID del cliente (PK)
-- Nombre completo
-- Email (UNIQUE)
-- Contraseña cifrada
-- Dirección (para envíos)
-- Teléfono
-- Fecha de registro
-- Rol (comprador, vendedor, admin)
-- Estado de la cuenta (activo, suspendido, eliminado)
+- `id` (PK)
+- `rut` (UNIQUE)
+- `nombres`
+- `apellidos`
+- `email` (UNIQUE)
+- `telefono`
+- `direccion`
+- `fecha_registro`
 
-### 🎲 PRODUCTOS (JUEGOS)
+> 🔁 Los clientes pueden actuar como compradores y/o vendedores.
 
-- ID del producto (PK)
-- Nombre del juego
-- Descripción
-- Año de publicación
-- Estado (nuevo, usado, abierto sin uso, etc.)
-- Precio venta
-- Precio arriendo
-- Tipo de transacción (venta, arriendo, ambos)
-- Condición del producto
-- ID del cliente vendedor  (FK) → CLIENTE
-- Fecha de publicación
-- Categoría (estrategia, party game, cooperativo, etc.)
-- Imágenes
+---
 
-### 💳 TRANSACCIONES
+### 🎲 PRODUCTOS
 
-- ID de transacción (PK)
-- Tipo (compra, arriendo)
-- ID producto (FK) → PRODUCTO
-- ID comprador  (FK) → CLIENTE
-- ID vendedor (FK) → CLIENTE
-- Fecha
-- Monto
-- Estado (pendiente, enviado, recibido, cancelado)
+- `id` (PK)
+- `cliente_id` (FK) → CLIENTES
+- `titulo`
+- `descripcion`
+- `precio`
+- `estado` (`nuevo`, `semi_nuevo`, `usado`)
+- `disponibilidad` (`disponible`, `vendido`, `pausado`)
+- `imagen` (URL en texto plano)
+- `fecha_publicacion`
 
-### 📝 BLOG
+---
 
-- ID del artículo (PK)
-- Título
-- Contenido
-- Fecha de publicación
-- ID autor (cliente o admin) (FK)
-- Categoría (reseñas, noticias, guías, comunidad)
+### 📷 IMAGENES_PRODUCTO (opcional, si se usan múltiples imágenes)
 
-### 📷 IMAGEN_PRODUCTO (opcional)
-- Imagen_id (PK)
-- Url
-- Descripcion
-- Producto_id (FK) → PRODUCTO
+- `id` (PK)
+- `producto_id` (FK) → PRODUCTOS
+- `url_imagen`
+
+---
+
+### 📝 ENTRADAS_BLOG
+
+- `id` (PK)
+- `titulo`
+- `contenido`
+- `autor` (nombre del autor)
+- `fecha_publicacion`
+- `publicado` (boolean)
+
+---
+
+### 🌟 PUNTUACIONES
+
+- `id` (PK)
+- `comprador_id` (FK) → CLIENTES
+- `vendedor_id` (FK) → CLIENTES
+- `producto_id` (FK) → PRODUCTOS
+- `puntuacion` (1 a 5)
+- `comentario`
+- `fecha_puntuacion`
 
 ---
 
 ## 🔗 RELACIONES Y CARDINALIDADES
-- CLIENTE (1) ↔ (N) PRODUCTO: un cliente puede publicar muchos productos.
-- CLIENTE (1) ↔ (N) BLOG_POST: un cliente puede escribir varios artículos del blog.
-- PRODUCTO (1) ↔ (N) TRANSACCION: un producto puede tener muchas transacciones (venta, arriendo).
-- CLIENTE (1) ↔ (N) TRANSACCION: un cliente puede ser comprador o vendedor en varias transacciones.
-- PRODUCTO (1) ↔ (N) IMAGEN_PRODUCTO: un producto puede tener varias imágenes.
+
+- CLIENTES (1) ↔ (N) PRODUCTOS: un cliente puede publicar varios productos.
+- CLIENTES (1) ↔ (N) ENTRADAS_BLOG: un cliente puede publicar múltiples artículos.
+- PRODUCTOS (1) ↔ (N) PUNTUACIONES: cada producto puede recibir varias puntuaciones.
+- CLIENTES (1) ↔ (N) PUNTUACIONES: los clientes pueden ser compradores y vendedores en varias puntuaciones.
+- PRODUCTOS (1) ↔ (N) IMAGENES_PRODUCTO: si se implementa, un producto puede tener múltiples imágenes.
+
+
 
 ```
-CLIENTE (cliente_id PK) 
-    ├─< PRODUCTO (producto_id PK, cliente_id FK)
-    │     └─< IMAGEN_PRODUCTO (imagen_id PK, producto_id FK)
-    └─< BLOG_POST (post_id PK, autor_id FK)
+CLIENTES (id PK)
+├─< PRODUCTOS (id PK, cliente_id FK)
+│ └─< IMAGENES_PRODUCTO (id PK, producto_id FK)
+└─< ENTRADAS_BLOG (id PK, autor)
 
-PRODUCTO 
-    └─< TRANSACCION (transaccion_id PK, producto_id FK, comprador_id FK, vendedor_id FK)
+PRODUCTOS
+└─< PUNTUACIONES (id PK, producto_id FK, comprador_id FK, vendedor_id FK)
 ```
+
 ---
 
 ## 🔐 Reglas de Negocio
 
-- Un cliente puede ser comprador y/o vendedor.
-- Un juego puede estar disponible solo para venta, solo para arriendo o ambos.
-- Los artículos del blog solo pueden ser creados por usuarios autorizados.
-- El historial de transacciones se mantiene para trazabilidad.
-- Los usuarios pueden recibir retroalimentación o calificación tras cada transacción.
+- Los clientes pueden actuar como compradores, vendedores o ambos.
+- Un producto puede estar disponible para venta, y cambiar su estado según transacciones.
+- Las puntuaciones reflejan la experiencia del comprador tras la compra.
+- Los artículos del blog pueden ser publicados por cualquier cliente, administrador o autor autorizado.
+- El historial de publicaciones y puntuaciones se mantiene para trazabilidad.
 
 ---
 
-## 🛠 Tecnologías Sugeridas
+## 🛠 Tecnologías Utilizadas
 
-- PostgreSQL o MySQL como motor de base de datos relacional
-- Integración con backend (por ejemplo, Node.js, Java, Python)
-- ORM recomendado: Sequelize, Prisma, Hibernate o Django ORM
+- **MySQL** como motor de base de datos relacional
+- Integración sugerida con backend en **Java**, **Node.js**, o **Python**
+- ORMs sugeridos: **Hibernate**, **Sequelize**, **Prisma**, o **Django ORM**
 
 ---
 
 ## 🚧 Próximos Pasos
 
 - Diagramar modelo entidad-relación (MER)
-- Implementar migraciones y seeds iniciales
-- Diseñar endpoints de consulta de productos y usuarios
-- Crear sistema de autenticación segura
-- Integrar la base de datos al frontend
+- Implementar migraciones y datos de prueba (seeds)
+- Diseñar endpoints para productos, clientes y blog
+- Agregar autenticación y autorización seguras
+- Crear dashboard administrativo (ventas, usuarios, productos)
 
 ---
 
@@ -128,9 +137,10 @@ Este proyecto nace con el objetivo de modernizar la experiencia de compra-venta 
 
 ## ✍️ Autoría
 
-Por Turnos - Proyecto C2C de juegos de mesa.  
-Desarrollado por Natalie Duchens Mura.
+**Por Turnos** - Proyecto C2C de juegos de mesa  
+Desarrollado por **Natalie Duchens Mura**
 
 ---
+
 #### NOTA:
-- 👀 Evaluaremos la posibilidad de implementar un sistema de arriendos, en caso de no lograrlo, solo será posible vender y comprar. 
+👀 Se contempla implementar sistema de arriendo en futuras versiones. Por ahora, la plataforma se centrará en la compra-venta de juegos.
