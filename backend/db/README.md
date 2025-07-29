@@ -87,6 +87,9 @@
 - CLIENTES (1) ↔ (N) PUNTUACIONES: los clientes pueden ser compradores y vendedores en varias puntuaciones.
 - PRODUCTOS (1) ↔ (N) IMAGENES_PRODUCTO: si se implementa, un producto puede tener múltiples imágenes.
 
+  
+
+<img width="1538" height="750" alt="Untitled" src="https://github.com/user-attachments/assets/570406d5-e0cc-4c67-834d-7663b644210f" />
 
 
 ```
