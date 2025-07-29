@@ -1,75 +1,82 @@
 -- =====================================================
 -- E-COMMERCE C2C DE JUEGOS DE MESA - "POR TURNOS"
--- Base de Datos: PostgreSQL
+-- Base de Datos: MySQL
 -- Descripción: Esquema de base de datos para clientes, productos y blog
 -- =====================================================
 
--- =====================================
--- EXTENSIONES NECESARIAS
--- =====================================
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Crear base de datos
+DROP DATABASE IF EXISTS por_turnos;
+CREATE DATABASE por_turnos;
+USE por_turnos;
 
 -- =====================================
 -- TABLA: clientes
 -- =====================================
 CREATE TABLE clientes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    nombre VARCHAR(100) NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rut VARCHAR(12) NOT NULL UNIQUE,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL, 
     email VARCHAR(100) NOT NULL UNIQUE,
     telefono VARCHAR(20),
     direccion TEXT,
-    fecha_registro TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- =====================================
 -- TABLA: productos
 -- =====================================
-CREATE TYPE estado_producto AS ENUM (
-    'nuevo',
-    'semi_nuevo',
-    'semi_usado',
-    'usado',
-);
-
-CREATE TYPE disponibilidad_producto AS ENUM (
-    'disponible',
-    'vendido',
-    'pausado'
-);
-
 CREATE TABLE productos (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    titulo VARCHAR(150) NOT NULL,
-    descripcion TEXT,
-    precio NUMERIC(10,2) NOT NULL CHECK (precio >= 0),
-    estado estado_producto NOT NULL DEFAULT 'usado',
-    disponibilidad disponibilidad_producto DEFAULT 'disponible',
-    cliente_id UUID NOT NULL REFERENCES clientes(id),
-    fecha_publicacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    titulo VARCHAR(120) NOT NULL,
+    descripcion TEXT NOT NULL,
+    imagen TEXT, -- Aquí va la URL de la imagen
+    precio DECIMAL(10,2) NOT NULL CHECK (precio >= 0),
+    estado ENUM('nuevo', 'semi_nuevo', 'usado') NOT NULL DEFAULT 'usado',
+    disponibilidad ENUM('disponible', 'vendido', 'pausado') NOT NULL DEFAULT 'disponible',
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
-
 
 -- =====================================
--- TABLA: blog
+-- TABLA: entradas_blog
 -- =====================================
 CREATE TABLE entradas_blog (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(200) NOT NULL,
     contenido TEXT NOT NULL,
-    autor VARCHAR(100),
-    fecha_publicacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    autor VARCHAR(200) NOT NULL,
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     publicado BOOLEAN DEFAULT TRUE
+);
+
+-- =====================================
+-- TABLA: puntuaciones
+-- =====================================
+CREATE TABLE puntuaciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    comprador_id INT NOT NULL,
+    vendedor_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    puntuacion INT CHECK (puntuacion BETWEEN 1 AND 5),
+    comentario TEXT,
+    fecha_puntuacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (comprador_id) REFERENCES clientes(id), -- El cliente que compra
+    FOREIGN KEY (vendedor_id) REFERENCES clientes(id), -- El cliente que vendió
+    FOREIGN KEY (producto_id) REFERENCES productos(id) -- El cliente que aún no ha vendido
 );
 
 -- =====================================
 -- INDICES RELEVANTES
 -- =====================================
 CREATE INDEX idx_productos_estado ON productos(estado);
+CREATE INDEX idx_productos_disponibilidad ON productos(disponibilidad);
 CREATE INDEX idx_productos_cliente ON productos(cliente_id);
 CREATE INDEX idx_blog_fecha ON entradas_blog(fecha_publicacion);
 
 -- =====================================
--- VISTAS ÚTILES
+-- VISTA: Productos disponibles con nombre del vendedor
 -- =====================================
 CREATE OR REPLACE VIEW vista_productos_disponibles AS
 SELECT 
@@ -77,7 +84,7 @@ SELECT
     p.titulo,
     p.precio,
     p.estado,
-    c.nombre AS vendedor
+    CONCAT(c.nombres, ' ', c.apellidos) AS vendedor
 FROM productos p
 JOIN clientes c ON p.cliente_id = c.id
 WHERE p.disponibilidad = 'disponible';
@@ -86,8 +93,7 @@ WHERE p.disponibilidad = 'disponible';
 -- COMENTARIOS FINALES
 -- =====================================
 /*
-- Esta base de datos está diseñada para un modelo C2C sencillo y escalable.
-- Se pueden extender entidades como "categorías", "rentas", "comentarios", "transacciones", etc.
-- Las entradas del blog sirven como estrategia de contenido y SEO para atraer público.
-- Los productos se asocian directamente a un cliente (vendedor).
+- Los clientes pueden ser compradores o vendedores según el contexto.
+- Puedes agregar más tablas como categorías, transacciones, favoritos, etc.
+- Se usa ENUM para estado y disponibilidad de productos para mantener opciones controladas.
 */
