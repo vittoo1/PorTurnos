@@ -1,0 +1,19 @@
+#Para desarrollo local ( localhost, root)
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password:  ${DB_PASSWORD}
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  sql:
+    init:
+      mode: always # cambiar a always
+      schema-locations: classpath:schema.sql
