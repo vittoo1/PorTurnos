@@ -17,5 +17,7 @@ frontend/
 ```
 backend/
 └── db/
-    └── datos.db
+    ├── datos.db
+    └── tiendita/
+
 ```
