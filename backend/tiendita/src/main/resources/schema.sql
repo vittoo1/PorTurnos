@@ -26,17 +26,15 @@ CREATE TABLE IF NOT EXISTS productos(
     FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
 
+-- TABLA COMENTARIOS
+CREATE TABLE IF NOT EXISTS comentarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id BIGINT NOT NULL,
+    producto_id BIGINT NOT NULL,
+    nombre_comentario VARCHAR(50) NOT NULL,
+    texto VARCHAR(300) NOT NULL,
+    fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+);

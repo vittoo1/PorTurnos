@@ -16,7 +16,7 @@ public class ProductoServiceImpl implements ProductoService {
     private final ProductoRepository productoRepository;
 
     @Override
-    public List<Producto> listar() {return productoRepository.findAll();}
+    public List<Producto> listar() {return productoRepository.findAll(); }
 
     @Override
     public Optional<Producto> obtenerPorId(Long id) { return productoRepository.findById(id); }
