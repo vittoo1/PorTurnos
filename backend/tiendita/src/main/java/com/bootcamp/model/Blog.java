@@ -1,5 +1,6 @@
 package com.bootcamp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,8 @@ public class Blog {
     private String titulo;
 
     @NotBlank(message = "El cuerpo del blog es obligatorio")
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty("cuerpo_blog")
     private String cuerpoBlog;
 
     @Column(columnDefinition = "TEXT")
@@ -37,6 +40,11 @@ public class Blog {
 
     @Column(name = "fecha_publicacion", updatable = false)
     private LocalDateTime fechaPublicacion;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaPublicacion= LocalDateTime.now();
+    }
 
 
 
