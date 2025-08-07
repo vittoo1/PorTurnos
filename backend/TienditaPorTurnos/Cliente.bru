@@ -1,0 +1,26 @@
+meta {
+  name: Cliente
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/clientes
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "rut": "12.345.678-9",
+    "nombres": "Camila",
+    "apellidos": "Valenzuela",
+    "email": "camila.valenzuela@example.com",
+    "telefono": "+56912345678",
+    "direccion": "Avenida Los Leones 1234, Providencia, Santiago"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
