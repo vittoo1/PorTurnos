@@ -1,30 +1,29 @@
 package com.bootcamp.controller;
 
-import com.bootcamp.model.Blog;
 import com.bootcamp.service.BlogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.bootcamp.model.Blog;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/blogs")  // Doble ruta evitar
-@RequiredArgsConstructor  // Constructor de Lombok
+@RequestMapping("/api/blogs")
+@RequiredArgsConstructor
 public class BlogController {
 
     private final BlogService blogService;
 
-
     @GetMapping
-    public List<Blog> listar() { return blogService.listar(); }
+    public List<Blog> listar() { return blogService.listarTodos(); }
 
     @GetMapping("/{id}")
     public ResponseEntity<Blog> obtenerPorId(@PathVariable Long id){
-        return blogService.obtenerPorId((id))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+      return blogService.obtenerPorId(id)
+              .map(ResponseEntity::ok)
+              .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -42,4 +41,6 @@ public class BlogController {
         blogService.eliminar(id);
         return ResponseEntity.ok().build();
     }
+
+
 }

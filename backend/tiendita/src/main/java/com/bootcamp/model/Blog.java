@@ -19,6 +19,7 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Relación con el cliente que publicó el producto
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
@@ -31,7 +32,7 @@ public class Blog {
     private String titulo;
 
     @NotBlank(message = "El cuerpo del blog es obligatorio")
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "cuerpo_blog", nullable = false)
     @JsonProperty("cuerpo_blog")
     private String cuerpoBlog;
 
@@ -45,7 +46,4 @@ public class Blog {
     protected void onCreate() {
         this.fechaPublicacion= LocalDateTime.now();
     }
-
-
-
 }

@@ -15,7 +15,7 @@ public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
 
     @Override
-    public List<Blog> listar() {
+    public List<Blog> listarTodos() {
         return blogRepository.findAll();
     }
     @Override

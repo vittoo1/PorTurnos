@@ -1,129 +1,147 @@
 package com.bootcamp.service;
 
 import com.bootcamp.model.Venta;
+import com.bootcamp.model.enums.EstadoVenta;
+import com.bootcamp.model.enums.MetodoPago;
 import com.bootcamp.repository.VentaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class VentaServiceImpl implements VentaService {
 
-    @Autowired
-    private VentaRepository ventaRepository;
+    private final VentaRepository ventaRepository;
+
+    public VentaServiceImpl(VentaRepository ventaRepository) {
+        this.ventaRepository = ventaRepository;
+    }
 
     @Override
+    @Transactional
     public Venta guardarVenta(Venta venta) {
+        // Calcular total y fecha antes de persistir
+        calcularTotal(venta);
+        if (venta.getFechaVenta() == null) {
+            venta.setFechaVenta(LocalDateTime.now());
+        }
         return ventaRepository.save(venta);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Venta> obtenerVentaPorId(Long id) {
         return ventaRepository.findById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerTodasLasVentas() {
         return ventaRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Venta actualizarVenta(Venta venta) {
+        ventaRepository.findById(venta.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + venta.getId()));
+        calcularTotal(venta);
         return ventaRepository.save(venta);
     }
 
     @Override
+    @Transactional
     public void eliminarVenta(Long id) {
+        if (!ventaRepository.existsById(id)) {
+            throw new EntityNotFoundException("Venta no encontrada con ID: " + id);
+        }
         ventaRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasPorComprador(Long clienteCompradorId) {
-        return ventaRepository.findByClienteCompradorId(clienteCompradorId);
+        return ventaRepository.buscarPorIdClienteComprador(clienteCompradorId);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasPorVendedor(Long clienteVendedorId) {
-        return ventaRepository.findByClienteVendedorId(clienteVendedorId);
+        return ventaRepository.buscarPorIdClienteVendedor(clienteVendedorId);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasPorProducto(Long productoId) {
-        return ventaRepository.findByProductoId(productoId);
+        return ventaRepository.buscarPorIdProducto(productoId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Venta> obtenerVentasPorEstado(Venta.EstadoVenta estadoVenta) {
-        return ventaRepository.findByEstadoVenta(estadoVenta);
+    public List<Venta> obtenerVentasPorEstado(EstadoVenta estadoVenta) {
+        return ventaRepository.buscarPorEstado(estadoVenta);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Venta> obtenerVentasPorMetodoPago(Venta.MetodoPago metodoPago) {
-        return ventaRepository.findByMetodoPago(metodoPago);
+    public List<Venta> obtenerVentasPorMetodoPago(MetodoPago metodoPago) {
+        return ventaRepository.buscarPorMetodoPago(metodoPago);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasEntreFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
-        return ventaRepository.findByFechaVentaBetween(fechaInicio, fechaFin);
+        return ventaRepository.buscarPorRangoFechas(fechaInicio, fechaFin);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Venta> obtenerVentasPendientesEntrega() {
-        return ventaRepository.findVentasPendientesEntrega();
+        return ventaRepository.buscarPendientesDeEntrega();
     }
 
     @Override
+    @Transactional
     public Venta confirmarVenta(Long ventaId) {
-        Optional<Venta> ventaOpt = ventaRepository.findById(ventaId);
-        if (ventaOpt.isPresent()) {
-            Venta venta = ventaOpt.get();
-            venta.setEstadoVenta(Venta.EstadoVenta.CONFIRMADA);
-            return ventaRepository.save(venta);
-        }
-        throw new RuntimeException("Venta no encontrada con ID: " + ventaId);
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
+        venta.setEstadoVenta(EstadoVenta.CONFIRMADA);
+        calcularTotal(venta);
+        return ventaRepository.save(venta);
     }
 
     @Override
+    @Transactional
     public Venta marcarComoEntregada(Long ventaId) {
-        Optional<Venta> ventaOpt = ventaRepository.findById(ventaId);
-        if (ventaOpt.isPresent()) {
-            Venta venta = ventaOpt.get();
-            venta.setEstadoVenta(Venta.EstadoVenta.ENTREGADA);
-            venta.setFechaEntrega(LocalDateTime.now());
-            return ventaRepository.save(venta);
-        }
-        throw new RuntimeException("Venta no encontrada con ID: " + ventaId);
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
+        venta.setEstadoVenta(EstadoVenta.ENTREGADA);
+        venta.setFechaEntrega(LocalDateTime.now());
+        calcularTotal(venta);
+        return ventaRepository.save(venta);
     }
 
     @Override
+    @Transactional
     public Venta cancelarVenta(Long ventaId) {
-        Optional<Venta> ventaOpt = ventaRepository.findById(ventaId);
-        if (ventaOpt.isPresent()) {
-            Venta venta = ventaOpt.get();
-            venta.setEstadoVenta(Venta.EstadoVenta.CANCELADA);
-            return ventaRepository.save(venta);
-        }
-        throw new RuntimeException("Venta no encontrada con ID: " + ventaId);
+        Venta venta = ventaRepository.findById(ventaId)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
+        venta.setEstadoVenta(EstadoVenta.CANCELADA);
+        calcularTotal(venta);
+        return ventaRepository.save(venta);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Double obtenerTotalVentasPorVendedor(Long vendedorId) {
-        Double total = ventaRepository.getTotalVentasByVendedor(vendedorId);
-        return total != null ? total : 0.0;
+    public BigDecimal obtenerTotalVentasPorVendedor(Long idVendedor) {
+        BigDecimal total = ventaRepository.obtenerTotalPorIdVendedor(idVendedor);
+        return total != null ? total : BigDecimal.ZERO;
+    }
+
+    private void calcularTotal(Venta venta) {
+        if (venta.getPrecioVenta() != null && venta.getCantidadVendida() != null) {
+            BigDecimal total = venta.getPrecioVenta()
+                    .multiply(BigDecimal.valueOf(venta.getCantidadVendida()))
+                    .setScale(2, RoundingMode.HALF_UP);
+            // Setter expuesto por la entidad para uso del servicio
+            venta.setTotalInterno(total);
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BlogService {
 
-    List<Blog> listar();
+    List<Blog> listarTodos();
     Optional<Blog> obtenerPorId (Long id);
     Blog guardar (Blog blog);
     Blog actualizar (Long id, Blog blog);

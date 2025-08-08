@@ -1,14 +1,16 @@
 package com.bootcamp.controller;
 
 import com.bootcamp.model.Venta;
+import com.bootcamp.model.enums.EstadoVenta;
 import com.bootcamp.service.VentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,10 +86,10 @@ public class VentaController {
     }
 
     // Obtener ventas por comprador
-    @GetMapping("/comprador/{clienteId}")
-    public ResponseEntity<List<Venta>> obtenerVentasPorComprador(@PathVariable Long clienteId) {
+    @GetMapping("/comprador/{idComprador}")
+    public ResponseEntity<List<Venta>> obtenerVentasPorComprador(@PathVariable Long idComprador) {
         try {
-            List<Venta> ventas = ventaService.obtenerVentasPorComprador(clienteId);
+            List<Venta> ventas = ventaService.obtenerVentasPorComprador(idComprador);
             return new ResponseEntity<>(ventas, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,28 +97,31 @@ public class VentaController {
     }
 
     // Obtener ventas por vendedor
-    @GetMapping("/vendedor/{clienteId}")
-    public ResponseEntity<List<Venta>> obtenerVentasPorVendedor(@PathVariable Long clienteId) {
+    @GetMapping("/vendedor/{idVendedor}")
+    public ResponseEntity<List<Venta>> obtenerVentasPorVendedor(@PathVariable Long idVendedor) {
         try {
-            List<Venta> ventas = ventaService.obtenerVentasPorVendedor(clienteId);
+            List<Venta> ventas = ventaService.obtenerVentasPorVendedor(idVendedor);
             return new ResponseEntity<>(ventas, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    // Obtener total de ventas por vendedor
+    @GetMapping("/vendedor/{idVendedor}/total")
+    public ResponseEntity<BigDecimal> obtenerTotalVentasPorVendedor(@PathVariable Long idVendedor) {
+        try {
+            BigDecimal total = ventaService.obtenerTotalVentasPorVendedor(idVendedor);
+            return ResponseEntity.ok(total);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // Obtener ventas por estado
     @GetMapping("/estado/{estado}")
-    public ResponseEntity<List<Venta>> obtenerVentasPorEstado(@PathVariable String estado) {
-        try {
-            Venta.EstadoVenta estadoVenta = Venta.EstadoVenta.valueOf(estado.toUpperCase());
-            List<Venta> ventas = ventaService.obtenerVentasPorEstado(estadoVenta);
-            return new ResponseEntity<>(ventas, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<List<Venta>> obtenerVentasPorEstado(@PathVariable EstadoVenta estado) {
+        return ResponseEntity.ok(ventaService.obtenerVentasPorEstado(estado));
     }
 
     // Confirmar venta
@@ -153,17 +158,6 @@ public class VentaController {
             return new ResponseEntity<>(ventaCancelada, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Obtener total de ventas por vendedor
-    @GetMapping("/vendedor/{vendedorId}/total")
-    public ResponseEntity<Double> obtenerTotalVentasPorVendedor(@PathVariable Long vendedorId) {
-        try {
-            Double total = ventaService.obtenerTotalVentasPorVendedor(vendedorId);
-            return new ResponseEntity<>(total, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
