@@ -12,40 +12,48 @@
 <body>
 
   <!-- HEADER -->
-  <header class="pt-header shadow-sm">
+<header class="pt-header shadow-sm">
     <div class="container py-2">
-      <div class="d-flex align-items-center gap-3">
+      <!-- Fila 1: Logo + Buscador -->
+      <div class="row align-items-center">
         <!-- Logo -->
-        <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
-          <img src="../assets/img/LogoPorTurnos.png" alt="Por Turnos" height="44">
-        </a>
-
+        <div class="col-auto">
+          <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <img src="../assets/img/LogoPorTurnos.png" alt="Por Turnos" height="80">
+          </a>
+        </div>
         <!-- Buscador -->
-        <form class="ms-auto flex-grow-1 d-none d-md-block" role="search">
-          <div class="input-group pt-search">
-            <input class="form-control" type="search" placeholder="Buscar juegos o artículos…" aria-label="Buscar">
-            <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
-          </div>
-        </form>
-
-        <!-- Botón usuario -->
-        <a href="#" class="btn btn-usuario rounded-3 px-3 d-none d-md-inline-block">Juan Pérez</a>
+        <div class="col">
+          <form role="search">
+            <div class="input-group pt-search">
+              <input class="form-control" type="search" placeholder="Buscar juegos o artículos…" aria-label="Buscar">
+              <button class="btn btn-outline-dark" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Usuario -->
+        <div class="col-auto d-none d-md-block">
+          <a href="#" class="btn btn-usuario rounded-3 px-3">Juan Pérez</a>
+        </div>
       </div>
-
-      <!-- Navbar simple -->
-      <nav class="pt-subnav d-flex flex-wrap gap-3 mt-2">
-        <a href="#" class="pt-navlink">Categorías</a>
-        <a href="#" class="pt-navlink">Ofertas</a>
-        <a href="#" class="pt-navlink">Vender</a>
-        <a href="#" class="pt-navlink">Ayuda</a>
-
-        <span class="flex-grow-1"></span>
-
-        <a href="#" class="pt-navlink">Ver cuenta</a>
-        <a href="blog.html" class="pt-navlink">Blog</a>
-        <a href="#" class="pt-navlink">Mis compras</a>
-        <a href="#" class="pt-navlink"><i class="bi bi-cart3"></i></a>
-      </nav>
+      <!-- Fila 2: Navbar -->
+      <div class="row mt-2">
+        <div class="col">
+          <nav class="pt-subnav d-flex flex-wrap gap-3">
+            <a href="#" class="pt-navlink">Categorías</a>
+            <a href="#" class="pt-navlink">Ofertas</a>
+            <a href="#" class="pt-navlink">Vender</a>
+            <a href="#" class="pt-navlink">Ayuda</a>
+            <span class="flex-grow-1"></span>
+            <a href="#" class="pt-navlink">Ver cuenta</a>
+            <a href="blog.html" class="pt-navlink">Blog</a>
+            <a href="#" class="pt-navlink">Mis compras</a>
+            <a href="#" class="pt-navlink"><i class="bi bi-cart3"></i></a>
+          </nav>
+        </div>
+      </div>
     </div>
   </header>
 
