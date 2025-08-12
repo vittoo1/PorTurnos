@@ -50,13 +50,6 @@
 .pt-social{ color: var(--color-negroA); }
 .pt-social:hover{ color: var(--color-rosa); }
 
-/* Centrado de los 3 menús del footer */
-.footer-menus nav{ min-width: 180px; }      /* evita que se aplasten */
-@media (max-width: 991.98px){
-  .footer-menus{ justify-content: flex-start; gap: 2rem; }
-}
-
-
 /*-------------Header y Footer-------------*/
 
 
