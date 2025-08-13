@@ -55,7 +55,7 @@ backend/
 
 ### Diagrama Entidad-Relación
 
-```mermaid
+```
 erDiagram
     CLIENTES ||--o{ PRODUCTOS : "publica"
     CLIENTES ||--o{ COMENTARIOS : "escribe"
