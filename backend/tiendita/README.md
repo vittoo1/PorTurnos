@@ -233,7 +233,7 @@ Cliente HTTP Request
 
 ### Diagrama ER Completo
 
-```mermaid
+```
 erDiagram
     CLIENTES ||--o{ PRODUCTOS : "publica (1:N)"
     CLIENTES ||--o{ COMENTARIOS : "escribe (1:N)"
@@ -382,4 +382,5 @@ GROUP BY v.cliente_vendedor_id, cli.nombres, cli.apellidos
 ORDER BY monto_total DESC
 LIMIT 5;
 ```
+
 ---
