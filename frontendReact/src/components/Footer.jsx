@@ -30,7 +30,7 @@ export default function Footer() {
                 <nav aria-labelledby="footer-shop">
                   <div id="footer-shop" className="fw-semibold mb-2">Sobre la Tienda</div>
                   <ul className="list-unstyled small m-0">
-                    <li><a className="pt-footlink" href="#">Nosotros</a></li>
+                    <li><NavLink className="pt-footlink" to="/nosotros">Nosotros</NavLink></li>
                     <li><a className="pt-footlink" href="#">Contacto</a></li>
                     <li><a className="pt-footlink" href="#">Envíos</a></li>
                   </ul>

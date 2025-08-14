@@ -9,6 +9,7 @@ import Post from './pages/Post.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Terminos from './pages/Terminos.jsx'
+import Nosotros from "./pages/Nosotros.jsx";
 
 export default function App() {
     return (
@@ -24,6 +25,7 @@ export default function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/terminos" element={<Terminos />} />
+                        <Route path="/nosotros" element={<Nosotros />} />
                     </Route>
                 </Routes>
             </main>

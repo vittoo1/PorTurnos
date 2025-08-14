@@ -191,12 +191,12 @@ mvn test
 
 ## 👥 Equipo de Desarrollo
 
-| Desarrollador | Rol | GitHub |
-|---------------|-----|---------|
-| **Angelo Grigoletti** | Full Stack Developer | [@angelo] |
-| **Natalie Duchens** | Frontend Developer | [@natalie] |
-| **Robinson Rojas** | Backend Developer | [@robinson] |
-| **Kiara Iza** | Database Designer | [@kiara] |
+| Desarrollador |
+|---------------|
+| **Angelo Grigoletti** |
+| **Natalie Duchens** |
+| **Robinson Rojas** |
+| **Kiara Iza** |
 
 ---
 
