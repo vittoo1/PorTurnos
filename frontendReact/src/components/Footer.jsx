@@ -1,8 +1,11 @@
+import { NavLink } from 'react-router-dom'
+
 export default function Footer() {
   return (
       <footer className="pt-footer mt-5" role="contentinfo">
         <div className="container py-3">
           <div className="row g-4 align-items-start">
+
             {/* Izquierda */}
             <div className="col-12 col-lg-4">
               <small className="d-block mb-2">© {new Date().getFullYear()} Por Turnos. Todos los derechos reservados.</small>
@@ -13,7 +16,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Derecha: grupo centrado */}
+            {/* Derecha */}
             <div className="col-12 col-lg-8">
               <div className="footer-menus d-flex justify-content-center gap-5 flex-wrap text-center text-lg-start">
                 <nav aria-labelledby="footer-menu">
@@ -36,7 +39,7 @@ export default function Footer() {
                 <nav aria-labelledby="footer-policy">
                   <div id="footer-policy" className="fw-semibold mb-2">Políticas e Información</div>
                   <ul className="list-unstyled small m-0">
-                    <li><a className="pt-footlink" href="#">Términos y Condiciones</a></li>
+                    <li><NavLink className="pt-footlink" to="/terminos">Términos y Condiciones</NavLink></li>
                     <li><a className="pt-footlink" href="#">Conducta y Seguridad</a></li>
                     <li><a className="pt-footlink" href="#">Privacidad</a></li>
                   </ul>
@@ -48,3 +51,4 @@ export default function Footer() {
       </footer>
   )
 }
+

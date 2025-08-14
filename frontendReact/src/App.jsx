@@ -8,6 +8,7 @@ import Post from './pages/Post.jsx'
 // Así como sus <Route path = .../>
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Terminos from './pages/Terminos.jsx'
 
 export default function App() {
     return (
@@ -22,6 +23,7 @@ export default function App() {
                         <Route path="/blog/:slug" element={<Post />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/terminos" element={<Terminos />} />
                     </Route>
                 </Routes>
             </main>
