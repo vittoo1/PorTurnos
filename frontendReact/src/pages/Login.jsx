@@ -1,6 +1,7 @@
-// src/pages/Login.jsx
+/// src/pages/Login.jsx
 import { NavLink } from 'react-router-dom'
 import React from 'react'
+import logo from '../assets/img/LogoPorTurnos.png'
 
 export default function Login() {
     const handleSubmit = (e) => {
@@ -18,34 +19,69 @@ export default function Login() {
                             {/* tarjeta uniforme */}
                             <div className="auth-card">
                                 <div className="text-center mb-3">
-                                    <i className="bi bi-person-circle fs-1 text-rosa"></i>
+                                    <img
+                                        src={logo}
+                                        alt="Logo Por Turnos"
+                                        style={{
+                                            height: '80px',
+                                        }}
+                                    />
                                     <h2 className="mt-2 gradient-title">Login</h2>
                                 </div>
 
                                 <form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <label htmlFor="loginEmail" className="form-label">Correo electrónico</label>
-                                        <input type="email" className="form-control" id="loginEmail" name="email" placeholder="nombre@ejemplo.com" required />
+                                        <label htmlFor="loginEmail" className="form-label">
+                                            Correo electrónico
+                                        </label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            id="loginEmail"
+                                            name="email"
+                                            placeholder="nombre@ejemplo.com"
+                                            required
+                                        />
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor="loginPassword" className="form-label">Contraseña</label>
-                                        <input type="password" className="form-control" id="loginPassword" name="password" placeholder="••••••••" required />
+                                        <label htmlFor="loginPassword" className="form-label">
+                                            Contraseña
+                                        </label>
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            id="loginPassword"
+                                            name="password"
+                                            placeholder="••••••••"
+                                            required
+                                        />
                                     </div>
 
                                     <div className="form-check mb-3">
-                                        <input className="form-check-input" type="checkbox" id="rememberMe" name="remember" />
-                                        <label className="form-check-label" htmlFor="rememberMe">Recordarme</label>
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="rememberMe"
+                                            name="remember"
+                                        />
+                                        <label className="form-check-label" htmlFor="rememberMe">
+                                            Recordarme
+                                        </label>
                                     </div>
 
                                     <div className="d-grid">
-                                        <button type="submit" className="btn btn-outline-dark btn-rosa">Ingresar</button>
+                                        <button type="submit" className="btn btn-outline-dark btn-rosa">
+                                            Ingresar
+                                        </button>
                                     </div>
                                 </form>
 
                                 <p className="text-center mt-3 mb-0 small">
                                     ¿No tienes cuenta?{' '}
-                                    <NavLink to="/register" className="link-primary fw-semibold">Regístrate</NavLink>
+                                    <NavLink to="/register" className="link-primary fw-semibold">
+                                        Regístrate
+                                    </NavLink>
                                 </p>
                             </div>
                         </div>

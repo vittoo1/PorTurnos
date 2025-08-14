@@ -161,6 +161,7 @@
     to { background-position-x: -500px; }
 }
 
+/* Boton Rosa */
 /* Botón "Volver" con color rosa */
 .btn-outline-dark.btn-rosa{
     color: var(--color-rosa);
