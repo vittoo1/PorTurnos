@@ -1,8 +1,40 @@
 // src/components/Header.jsx
+import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import logo from '../assets/img/LogoPorTurnos.png'
+import NotificationSystem from './marketplace/NotificationSystem'
 
 export default function Header() {
+    // Estado para controlar si el usuario ha iniciado sesión
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userName, setUserName] = useState('')
+    
+    // Simular verificación de inicio de sesión
+    useEffect(() => {
+        // En una aplicación real, esto vendría de un contexto de autenticación
+        // o de una llamada a la API para verificar el token
+        const checkLoginStatus = () => {
+            const userToken = localStorage.getItem('userToken')
+            const storedUserName = localStorage.getItem('userName')
+            
+            if (userToken) {
+                setIsLoggedIn(true)
+                setUserName(storedUserName || 'Usuario')
+            } else {
+                setIsLoggedIn(false)
+                setUserName('')
+            }
+        }
+        
+        checkLoginStatus()
+        
+        // Para propósitos de demostración, podemos simular un inicio de sesión
+        // Comenta estas líneas en producción
+        // localStorage.setItem('userToken', 'demo-token')
+        // localStorage.setItem('userName', 'Juan Pérez')
+        // setIsLoggedIn(true)
+        // setUserName('Juan Pérez')
+    }, [])
     return (
         <header className="pt-header shadow-sm">
             <div className="container py-2">
@@ -26,7 +58,11 @@ export default function Header() {
                     </div>
 
                     <div className="col-auto d-none d-md-block">
-                        <a href="#" className="btn btn-usuario rounded-3 px-3">Juan Pérez</a>
+                        {isLoggedIn ? (
+                            <a href="#" className="btn btn-usuario rounded-3 px-3">{userName}</a>
+                        ) : (
+                            <NavLink to="/login" className="btn btn-outline-primary rounded-3 px-3">Iniciar sesión</NavLink>
+                        )}
                     </div>
                 </div>
 
@@ -34,23 +70,28 @@ export default function Header() {
                 <div className="row mt-2">
                     <div className="col">
                         <nav className="pt-subnav d-flex flex-wrap gap-3">
+                            <NavLink className="pt-navlink" to="/marketplace">Marketplace</NavLink>
                             <a href="#" className="pt-navlink">Categorías</a>
-                            <a href="#" className="pt-navlink">Ofertas</a>
-                            <a href="#" className="pt-navlink">Vender</a>
+                            <NavLink className="pt-navlink" to="/marketplace/publish">Vender juego</NavLink>
                             <a href="#" className="pt-navlink">Ayuda</a>
 
                             <span className="flex-grow-1"></span>
 
-                            <a href="#" className="pt-navlink">Ver cuenta</a>
+                            <NavLink className="pt-navlink" to="/marketplace/seller-dashboard">Panel Vendedor</NavLink>
                             <NavLink className="pt-navlink" to="/blog">Blog</NavLink>
-                            <a href="#" className="pt-navlink">Mis compras</a>
+                            <NavLink className="pt-navlink" to="/marketplace/messages">Mensajes</NavLink>
 
-                            {/* Solo LOGIN aquí */}
-                            <NavLink className="pt-navlink" to="/login">Login</NavLink>
+                            {/* Mostrar Login solo si no ha iniciado sesión */}
+                            {!isLoggedIn && (
+                                <NavLink className="pt-navlink" to="/login">Login</NavLink>
+                            )}
 
-                            <a href="#" className="pt-navlink" aria-label="Carrito">
-                                <i className="bi bi-cart3"></i>
-                            </a>
+                            <div className="d-flex align-items-center">
+                                <NotificationSystem />
+                                <a href="#" className="pt-navlink ms-3" aria-label="Carrito">
+                                    <i className="bi bi-cart3"></i>
+                                </a>
+                            </div>
                         </nav>
                     </div>
                 </div>

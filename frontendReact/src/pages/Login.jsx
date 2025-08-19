@@ -56,6 +56,11 @@ export default function Login() {
                                             placeholder="••••••••"
                                             required
                                         />
+                                        <div className="mt-1 text-end">
+                                            <NavLink to="/forgot-password" className="small text-muted">
+                                                ¿Olvidaste tu contraseña?
+                                            </NavLink>
+                                        </div>
                                     </div>
 
                                     <div className="form-check mb-3">
