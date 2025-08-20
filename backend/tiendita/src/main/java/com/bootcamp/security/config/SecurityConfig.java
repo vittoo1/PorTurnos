@@ -51,8 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // OJO: si usas context-path /api en application-*.yml, LOS MATCHERS VAN SIN /api
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(clienteAuthProvider())
