@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import RatingSystem from '../../marketplace/components/RatingSystem';
 import { 
-  sampleProduct, 
-  relatedProducts,
+  sampleProduct,
+  generateRelatedProducts,
   conditionTranslations,
   completenessTranslations,
   conditionBadgeStyles,
@@ -11,8 +11,7 @@ import {
   productDetailSettings,
   sellerBadges,
   sectionIcons,
-  defaultMessages,
-  generateRelatedProducts
+  defaultMessages
 } from '../utils/dummyData';
 
 export default function ProductDetail() {
@@ -84,16 +83,19 @@ export default function ProductDetail() {
   const translateCompleteness = (completeness) => {
     return completenessTranslations[completeness] || completeness;
   };
-  
-  // Obtener clase CSS para badge de condición
+
+  // Obtener estilo de badge para condición
   const getConditionBadgeClass = (condition) => {
     return conditionBadgeStyles[condition] || 'bg-secondary';
   };
-  
-  // Obtener clase CSS para badge de completitud
+
+  // Obtener estilo de badge para completitud
   const getCompletenessBadgeClass = (completeness) => {
     return completenessBadgeStyles[completeness] || 'bg-secondary';
   };
+  
+  // Generar productos relacionados dinámicamente
+  const relatedProductsList = generateRelatedProducts(4);
   
   if (loading) {
     return (
@@ -423,22 +425,22 @@ export default function ProductDetail() {
         <div className="related-products mt-5">
           <h3 className="mb-4">Productos relacionados</h3>
           <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-            {relatedProducts.map(product => (
-              <div className="col" key={product.id}>
+            {relatedProductsList.map(relatedProduct => (
+              <div className="col" key={relatedProduct.id}>
                 <div className="card h-100 shadow-sm">
                   <img 
-                    src={product.image} 
+                    src={relatedProduct.image} 
                     className="card-img-top" 
-                    alt={product.title} 
+                    alt={relatedProduct.title} 
                     style={{ height: productDetailSettings.relatedProductImageHeight, objectFit: 'cover' }}
                   />
                   <div className="card-body">
-                    <h5 className="card-title">{product.title}</h5>
+                    <h5 className="card-title">{relatedProduct.title}</h5>
                     <div className="d-flex justify-content-between align-items-center">
-                      <span className="fw-bold">{product.price.toFixed(2)} €</span>
+                      <span className="fw-bold">${relatedProduct.price.toLocaleString('es-CL')} CLP</span>
                       <div>
                         <i className="bi bi-star-fill text-warning"></i>
-                        <span className="ms-1">{product.rating.toFixed(1)}</span>
+                        <span className="ms-1">{relatedProduct.rating.toFixed(1)}</span>
                       </div>
                     </div>
                   </div>

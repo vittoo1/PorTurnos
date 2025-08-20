@@ -72,7 +72,7 @@ export default function Header() {
                         <nav className="pt-subnav d-flex flex-wrap gap-3">
                             <NavLink className="pt-navlink" to="/marketplace">Tienda</NavLink>
                             <NavLink className="pt-navlink" to="/marketplace/publish">Vender juego</NavLink>
-                            <a href="#" className="pt-navlink">Ayuda</a>
+                            <NavLink to="/Contacto" className="pt-navlink">Ayuda</NavLink>
 
                             <span className="flex-grow-1"></span>
 

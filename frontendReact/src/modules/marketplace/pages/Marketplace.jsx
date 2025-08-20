@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ProductGrid from '../components/ProductGrid';
+import ProductGrid from '../components//ProductGrid';
 
 export default function Marketplace() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,11 +32,10 @@ export default function Marketplace() {
               </div>
               
               <div className="mt-4 d-flex gap-2">
-                <span className="badge bg-light text-dark p-2">Estrategia</span>
-                <span className="badge bg-light text-dark p-2">Familiar</span>
-                <span className="badge bg-light text-dark p-2">Cartas</span>
-                <span className="badge bg-light text-dark p-2">Rol</span>
                 <span className="badge bg-light text-dark p-2">Eurogames</span>
+                            <span className="badge bg-light text-dark p-2">Cooperativos</span>
+                            <span className="badge bg-light text-dark p-2">CCG</span>
+                            <span className="badge bg-light text-dark p-2">JDR</span>
               </div>
             </div>
             <div className="col-lg-6 d-none d-lg-block">

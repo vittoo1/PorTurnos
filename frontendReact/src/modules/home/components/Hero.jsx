@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import { heroContent } from '../utils/dummyData';
 
 export default function Hero() {
@@ -10,7 +11,7 @@ export default function Hero() {
               <p className="lead mb-4">{heroContent.subtitle}</p>
               <div className="d-flex gap-3">
                 <a href="#productos" className="btn btn-warning btn-lg">Explorar productos</a>
-                <a href="#nosotros" className="btn btn-outline-light btn-lg">Conoce más</a>
+                <NavLink to="/nosotros" className="btn btn-outline-light btn-lg">Conoce más</NavLink>
               </div>
             </div>
             <div className="col-lg-5">

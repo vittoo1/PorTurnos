@@ -1,25 +1,91 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function Register() {
-    const handleSubmit = (e) => {
+    const [formData, setFormData] = useState({
+        rut: '',
+        nombres: '',
+        apellidos: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        telefono: '',
+        direccion: ''
+    })
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
+    const { login } = useAuth()
+    const navigate = useNavigate()
+    
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+    
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        const form = new FormData(e.currentTarget)
-
+        setLoading(true)
+        setError('')
+        setSuccess('')
+        
+        // Validar que las contraseñas coincidan
+        if (formData.password !== formData.confirmPassword) {
+            setError('Las contraseñas no coinciden')
+            setLoading(false)
+            return
+        }
+        
         // Armamos el payload con los NOMBRES que tu backend espera
         const payload = {
-            rut: form.get('rut'),
-            nombres: form.get('nombres'),
-            apellidos: form.get('apellidos'),
-            email: form.get('email'),
-            password: form.get('password'),
-            telefono: form.get('telefono') || null,
-            direccion: form.get('direccion')
-            // fechaRegistro / enabled / roles: los maneja el backend
+            rut: formData.rut,
+            nombres: formData.nombres,
+            apellidos: formData.apellidos,
+            email: formData.email,
+            password: formData.password,
+            telefono: formData.telefono || null,
+            direccion: formData.direccion
         }
-
-        // TODO: reemplaza por tu llamada real (fetch/axios)
-        console.log('Registro (payload):', payload)
+        
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            
+            if (response.ok) {
+                const data = await response.json()
+                setSuccess('Registro exitoso. Redirigiendo...')
+                
+                // Auto-login después del registro
+                const userData = {
+                    id: data.id || 1,
+                    email: formData.email,
+                    nombres: formData.nombres,
+                    apellidos: formData.apellidos
+                }
+                
+                login(data.token, userData)
+                
+                setTimeout(() => {
+                    navigate('/')
+                }, 1500)
+            } else {
+                const errorData = await response.json()
+                setError(errorData.message || 'Error al registrar usuario')
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            setError('Error de conexión. Por favor, intenta de nuevo.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -36,6 +102,18 @@ export default function Register() {
                                 </div>
 
                                 <form onSubmit={handleSubmit} noValidate>
+                                    {error && (
+                                        <div className="alert alert-danger" role="alert">
+                                            {error}
+                                        </div>
+                                    )}
+                                    
+                                    {success && (
+                                        <div className="alert alert-success" role="alert">
+                                            {success}
+                                        </div>
+                                    )}
+                                    
                                     {/* RUT */}
                                     <div className="mb-3">
                                         <label htmlFor="rut" className="form-label">RUT</label>
@@ -44,11 +122,13 @@ export default function Register() {
                                             className="form-control"
                                             id="rut"
                                             name="rut"
+                                            value={formData.rut}
+                                            onChange={handleChange}
                                             placeholder="12.345.678-9"
                                             maxLength={12}
-                                            // Validación simple; puedes mejorarla con una función de DV
                                             pattern="^[0-9kK.\-]+$"
                                             required
+                                            disabled={loading}
                                         />
                                         <div className="form-text">Formato aceptado: 12.345.678-9 (puede incluir puntos y guion)</div>
                                     </div>
@@ -61,8 +141,11 @@ export default function Register() {
                                             className="form-control"
                                             id="nombres"
                                             name="nombres"
+                                            value={formData.nombres}
+                                            onChange={handleChange}
                                             maxLength={100}
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -74,8 +157,11 @@ export default function Register() {
                                             className="form-control"
                                             id="apellidos"
                                             name="apellidos"
+                                            value={formData.apellidos}
+                                            onChange={handleChange}
                                             maxLength={100}
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -87,9 +173,12 @@ export default function Register() {
                                             className="form-control"
                                             id="email"
                                             name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
                                             maxLength={100}
                                             placeholder="nombre@ejemplo.com"
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -101,8 +190,11 @@ export default function Register() {
                                             className="form-control"
                                             id="telefono"
                                             name="telefono"
+                                            value={formData.telefono}
+                                            onChange={handleChange}
                                             maxLength={20}
                                             placeholder="+56 9 1234 5678"
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -114,8 +206,11 @@ export default function Register() {
                                             className="form-control"
                                             id="direccion"
                                             name="direccion"
+                                            value={formData.direccion}
+                                            onChange={handleChange}
                                             maxLength={255}
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -127,8 +222,11 @@ export default function Register() {
                                             className="form-control"
                                             id="password"
                                             name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
                                             minLength={8}
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -139,8 +237,11 @@ export default function Register() {
                                             className="form-control"
                                             id="confirmPassword"
                                             name="confirmPassword"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
                                             minLength={8}
                                             required
+                                            disabled={loading}
                                         />
                                     </div>
 
@@ -154,8 +255,19 @@ export default function Register() {
 
                                     {/* Botón (usa tu estilo rosa) */}
                                     <div className="d-grid">
-                                        <button type="submit" className="btn btn-outline-dark btn-rosa">
-                                            Registrarme
+                                        <button 
+                                            type="submit" 
+                                            className="btn btn-outline-dark btn-rosa"
+                                            disabled={loading}
+                                        >
+                                            {loading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                    Registrando...
+                                                </>
+                                            ) : (
+                                                'Registrarme'
+                                            )}
                                         </button>
                                     </div>
                                 </form>
@@ -172,4 +284,3 @@ export default function Register() {
         </section>
     )
 }
-
