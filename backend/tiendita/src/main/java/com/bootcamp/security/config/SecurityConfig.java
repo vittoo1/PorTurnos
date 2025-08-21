@@ -54,9 +54,9 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     // 🔹 AQUÍ VAN LAS URLs ESPECÍFICAS
                     config.setAllowedOrigins(List.of(
-                            //"https://shiski.onrender.com/",
-                            //"https://shiski.vercel.app/",
-                            //"http://localhost:5173/",
+                            "https://porturnos.onrender.com",
+                            "por-turnos-ot6y.vercel.app",
+                            "http://localhost:5173/"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
