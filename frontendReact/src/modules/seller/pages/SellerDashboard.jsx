@@ -1,7 +1,7 @@
 // Página principal del Panel de Vendedor
 // Ubicación: /seller/pages/sellerPage.jsx
 
-import SellerData from '../components/sellerData';
+import SellerData from '../components/SellerData';
 
 export default function SellerDashboard() {
   const {
