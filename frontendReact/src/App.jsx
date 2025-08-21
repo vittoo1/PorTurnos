@@ -20,8 +20,9 @@ import Marketplace from './modules/marketplace/pages/Marketplace'
 import ProductDetail from './modules/product/pages/ProductDetail'
 import PublishGameForm from './modules/seller/components/PublishGameForm'
 import MessageSystem from './modules/marketplace/components/MessageSystem'
-import SellerDashboard from './modules/seller/pages/SellerDashboard'
+import SellerDashboard from './modules/seller/pages/sellerDashboard'
 import NotificationsPage from './modules/layouts/notifications/pages/NotificationsPage'
+import Cart from './modules/marketplace/pages/Cart'
 // Importaciones de autenticación
 import { AuthProvider } from './modules/auth/context/AuthContext'
 import ProtectedRoute from './modules/auth/components/ProtectedRoute'
@@ -47,6 +48,7 @@ export default function App() {
                             <Route path="/terminos" element={<Terminos />} />
                             <Route path="/conducta" element={<Conducta />} />
                             <Route path="/privacidad" element={<Privacidad />} />
+                            <Route path="/cart" element={<Cart />} />
                             {/* Rutas del marketplace */}
                                 <Route path="/marketplace" element={<Marketplace />} />
                                 <Route path="/marketplace/product/:productId" element={<ProductDetail />} />
