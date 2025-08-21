@@ -16,7 +16,6 @@ import {
   chartConfig,
   uiMessages,
   statsLabels,
-  getUnreadMessagesCount,
   getMaxEarnings
 } from '../utils/dummyData';
 
