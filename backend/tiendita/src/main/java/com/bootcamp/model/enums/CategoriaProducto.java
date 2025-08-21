@@ -5,15 +5,24 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum CategoriaProducto {
-    FAMILIAR,
-    CARTAS,
-    TRADICIONAL,
-    ROL,
-    DADOS,
-    TABLERO,
-    MINIATURAS,
-    EUROGAMES,
-    ABSTRACTOS;
+    Eurogames,
+    Ameritrash,
+    Fillers,
+    Cooperativos,
+    Miniaturas,
+    Roles_ocultos,
+    Para_dos,
+    Solitario,
+    WarGames,
+    Legacy,
+    Abstractos,
+    Party_Games,
+    Juegos_de_Rol,
+    Construcción_de_Mazos,
+    CCG,
+    LCG;
+
+
 
     @JsonCreator
     public static CategoriaProducto fromString(String value) {
