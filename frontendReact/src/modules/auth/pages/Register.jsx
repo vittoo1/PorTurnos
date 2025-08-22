@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { register as registerService } from '../service/authService'
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ export default function Register() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
-    const { login } = useAuth()
+    const { } = useAuth()
     const navigate = useNavigate()
     
     const handleChange = (e) => {
@@ -51,38 +52,16 @@ export default function Register() {
         }
         
         try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            })
+            // Usar el servicio de registro
+            await registerService(payload)
+            setSuccess('Registro exitoso. Redirigiendo al login...')
             
-            if (response.ok) {
-                const data = await response.json()
-                setSuccess('Registro exitoso. Redirigiendo...')
-                
-                // Auto-login después del registro
-                const userData = {
-                    id: data.id || 1,
-                    email: formData.email,
-                    nombres: formData.nombres,
-                    apellidos: formData.apellidos
-                }
-                
-                login(data.token, userData)
-                
-                setTimeout(() => {
-                    navigate('/')
-                }, 1500)
-            } else {
-                const errorData = await response.json()
-                setError(errorData.message || 'Error al registrar usuario')
-            }
+            setTimeout(() => {
+                navigate('/login')
+            }, 1500)
         } catch (error) {
             console.error('Error:', error)
-            setError('Error de conexión. Por favor, intenta de nuevo.')
+            setError(error.message || 'Error de conexión. Por favor, intenta de nuevo.')
         } finally {
             setLoading(false)
         }

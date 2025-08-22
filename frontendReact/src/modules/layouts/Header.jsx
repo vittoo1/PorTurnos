@@ -75,7 +75,14 @@ export default function Header() {
 
                     <div className="col-auto d-none d-md-block">
                         {isAuthenticated ? (
-                            <a href="#" className="btn btn-usuario rounded-3 px-3">{user}</a>
+                            <div className="dropdown">
+                                <button className="btn btn-usuario rounded-3 px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {user?.nombres || user?.email || 'Usuario'}
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li><a className="dropdown-item" href="#" onClick={handleLogout}>Cerrar sesión</a></li>
+                                </ul>
+                            </div>
                         ) : (
                             <NavLink to="/login" className="btn btn-outline-dark text-white rounded-3 px-3">Iniciar sesión</NavLink>
                         )}

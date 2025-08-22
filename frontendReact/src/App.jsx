@@ -44,6 +44,12 @@ export default function App() {
                                     <AddBlogForm />
                                 </ProtectedRoute>
                             } />
+                            {/* Ejemplo de ruta protegida con roles específicos */}
+                            {/* <Route path="/admin" element={
+                                <ProtectedRoute roles={['ADMIN']}>
+                                    <AdminPage />
+                                </ProtectedRoute>
+                            } /> */}
                             <Route path="/blog/:slug" element={<Post />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/reset-password" element={<ResetPassword />} />
