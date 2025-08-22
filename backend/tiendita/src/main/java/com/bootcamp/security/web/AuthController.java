@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth") // URL final con context-path /api -> /api/auth/...
+@RequestMapping("/api/auth") // URL final con context-path /api -> /api/auth/...
 @RequiredArgsConstructor
 public class AuthController {
 

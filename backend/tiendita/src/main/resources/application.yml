@@ -5,7 +5,3 @@ spring:
     name: tiendita
   profiles:
     active: prod # Cambia a 'Developer', 'Production' segun corresponda
-
-server:
-  servlet:
-    context-path: /api

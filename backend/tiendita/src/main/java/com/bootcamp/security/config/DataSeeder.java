@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Profile({"default","local","dev"}) // quítalo si quieres que corra en prod también
 public class DataSeeder implements CommandLineRunner {
 
     private final RolRepository rolRepo;
