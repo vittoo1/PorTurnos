@@ -45,6 +45,7 @@ export default function Header() {
                         }}>
                             <div className="input-group pt-search">
                               <input
+                                id='busqueda-header'
                                 className="form-control"
                                 type="search"
                                 placeholder="Buscar juegos o artículos…"
@@ -76,11 +77,14 @@ export default function Header() {
                     <div className="col-auto d-none d-md-block">
                         {isAuthenticated ? (
                             <div className="dropdown">
-                                <button className="btn btn-usuario rounded-3 px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {user?.nombres || user?.email || 'Usuario'}
+                                <button className="btn btn-outline-dark text-white rounded-3 px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    {user?.nombres} {user?.apellidos}
                                 </button>
                                 <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#" onClick={handleLogout}>Cerrar sesión</a></li>
+                                    <li><span className="dropdown-item-text">{user?.email}</span></li>
+                                 <li><hr className="dropdown-divider" /></li>
+                                    <li><a className="dropdown-item" href="/profile">Mi Perfil</a></li>
+                                    <li><a className="dropdown-item" href="#" onClick={handleLogout}>Cerrar Sesión</a></li>
                                 </ul>
                             </div>
                         ) : (
@@ -133,9 +137,9 @@ export default function Header() {
 
                             <div className="d-flex align-items-center">
                                 <NotificationSystem />
-                                <a href="#" className="pt-navlink ms-3" aria-label="Carrito">
+                                <NavLink to="/cart" className="pt-navlink ms-3 btn btn-link" aria-label="Carrito">
                                     <i className="bi bi-cart3"></i>
-                                </a>
+                                </NavLink>
                             </div>
                         </nav>
                     </div>

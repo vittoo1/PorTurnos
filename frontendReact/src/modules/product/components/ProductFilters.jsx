@@ -88,7 +88,7 @@ export default function ProductFilters({ onFilterChange }) {
         <h6 className="mb-3">Rango de precio</h6>
         <div className="d-flex align-items-center gap-2">
           <div className="input-group input-group-sm">
-            <span className="input-group-text">€</span>
+            <span className="input-group-text">$</span>
             <input 
               type="number" 
               className="form-control" 
@@ -100,7 +100,7 @@ export default function ProductFilters({ onFilterChange }) {
           </div>
           <span>-</span>
           <div className="input-group input-group-sm">
-            <span className="input-group-text">€</span>
+            <span className="input-group-text">$</span>
             <input 
               type="number" 
               className="form-control" 
@@ -142,7 +142,7 @@ export default function ProductFilters({ onFilterChange }) {
       
       {/* Filtro de categoría */}
       <div className="mb-4">
-        <h6 className="mb-2">Categoría</h6>
+        <h6 className="mb-2">Categorías</h6>
         <div className="row">
           {categoryOptions.map(option => (
             <div className="col-6" key={option.id}>
@@ -194,13 +194,13 @@ export default function ProductFilters({ onFilterChange }) {
       {/* Botones de acción */}
       <div className="d-grid gap-2">
         <button 
-          className="btn btn-primary" 
+          className="btn btn-warning-white" 
           onClick={applyFilters}
         >
           Aplicar filtros
         </button>
         <button 
-          className="btn btn-outline-secondary" 
+          className="btn btn-outline-dark text-white" 
           onClick={resetFilters}
         >
           Resetear filtros

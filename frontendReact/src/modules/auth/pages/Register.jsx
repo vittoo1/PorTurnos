@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { register as registerService } from '../service/authService'
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -17,7 +16,7 @@ export default function Register() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
-    const { } = useAuth()
+    const { login } = useAuth()
     const navigate = useNavigate()
     
     const handleChange = (e) => {
@@ -52,16 +51,38 @@ export default function Register() {
         }
         
         try {
-            // Usar el servicio de registro
-            await registerService(payload)
-            setSuccess('Registro exitoso. Redirigiendo al login...')
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
             
-            setTimeout(() => {
-                navigate('/login')
-            }, 1500)
+            if (response.ok) {
+                const data = await response.json()
+                setSuccess('Registro exitoso. Redirigiendo...')
+                
+                // Auto-login después del registro
+                const userData = {
+                    id: data.id || 1,
+                    email: formData.email,
+                    nombres: formData.nombres,
+                    apellidos: formData.apellidos
+                }
+                
+                login(data.token, userData)
+                
+                setTimeout(() => {
+                    navigate('/')
+                }, 1500)
+            } else {
+                const errorData = await response.json()
+                setError(errorData.message || 'Error al registrar usuario')
+            }
         } catch (error) {
             console.error('Error:', error)
-            setError(error.message || 'Error de conexión. Por favor, intenta de nuevo.')
+            setError('Error de conexión. Por favor, intenta de nuevo.')
         } finally {
             setLoading(false)
         }
@@ -76,7 +97,7 @@ export default function Register() {
                         <div className="col-md-7 col-lg-6">
                             <div className="auth-card">
                                 <div className="text-center mb-3">
-                                    <i className="bi bi-person-plus-fill fs-1 text-rosa"></i>
+                                    <i className="bi bi-person-plus-fill fs-1 text-negro"></i>
                                     <h2 className="mt-2 gradient-title">Regístrate</h2>
                                 </div>
 
@@ -236,7 +257,7 @@ export default function Register() {
                                     <div className="d-grid">
                                         <button 
                                             type="submit" 
-                                            className="btn btn-outline-dark btn-rosa"
+                                            className="btn btn-outline-dark text-white"
                                             disabled={loading}
                                         >
                                             {loading ? (
