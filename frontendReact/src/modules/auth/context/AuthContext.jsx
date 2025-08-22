@@ -1,69 +1,105 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  login as loginApi,
+  register as registerApi,
+  fetchProfile,
+  logout as logoutApi,
+  getUser as getUserStorage,
+  getToken as getTokenStorage,
+} from '../service/authService';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
-  }
-  return context;
-};
-
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Verificar si hay un token válido al cargar la aplicación
+  // Cargar sesión desde storage al montar
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem('userToken');
-      const userData = localStorage.getItem('userData');
-      
-      if (token && userData) {
-        try {
-          const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-          logout();
-        }
-      }
-      setLoading(false);
-    };
-
-    checkAuthStatus();
+    const t = getTokenStorage();
+    const u = getUserStorage();
+    setToken(t);
+    setUser(u);
+    setLoading(false);
   }, []);
 
-  const login = (token, userData) => {
-    localStorage.setItem('userToken', token);
-    localStorage.setItem('userData', JSON.stringify(userData));
-    setUser(userData);
-    setIsAuthenticated(true);
-  };
+  const isAuthenticated = Boolean(token);
 
-  const logout = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userData');
-    setUser(null);
-    setIsAuthenticated(false);
-  };
+  async function login(credentials) {
+    setError(null);
+    try {
+      const data = await loginApi(credentials);
+      setToken(data?.accessToken || null);
+      setUser(data?.user || null);
+      navigate('/', { replace: true });
+      return data;
+    } catch (err) {
+      const msg = err?.response?.data?.message || err.message;
+      setError(msg);
+      throw err;
+    }
+  }
 
-  const value = {
-    isAuthenticated,
-    user,
-    loading,
-    login,
-    logout
-  };
+  async function register(payload) {
+    setError(null);
+    try {
+      const data = await registerApi(payload);
+      return data;
+    } catch (err) {
+      const msg = err?.response?.data?.message || err.message;
+      setError(msg);
+      throw err;
+    }
+  }
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  async function loadProfile() {
+    try {
+      const me = await fetchProfile();
+      setUser(me);
+      return me;
+    } catch (err) {
+      // Silencioso si falla /auth/me
+      return null;
+    }
+  }
+
+  async function logout() {
+    try {
+      await logoutApi();
+    } finally {
+      setUser(null);
+      setToken(null);
+      navigate('/login', { replace: true });
+    }
+  }
+
+  const value = useMemo(
+    () => ({
+      user,
+      token,
+      isAuthenticated,
+      loading,
+      error,
+      login,
+      register,
+      logout,
+      loadProfile,
+      setUser,
+    }),
+    [user, token, isAuthenticated, loading, error]
   );
-};
 
-export default AuthContext;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return ctx;
+}

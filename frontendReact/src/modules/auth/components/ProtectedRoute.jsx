@@ -1,8 +1,8 @@
 import { useAuth } from '../context/AuthContext';
 import { Navigate, useLocation } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+const ProtectedRoute = ({ children, roles }) => {
+  const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -18,6 +18,14 @@ const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated) {
     // Redirigir al login y guardar la ubicación actual para redirigir después del login
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Verificación de roles si se especifican
+  if (roles && roles.length > 0) {
+    const hasRole = roles.includes(user?.role);
+    if (!hasRole) {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return children;
