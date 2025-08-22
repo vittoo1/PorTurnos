@@ -55,8 +55,9 @@ public class SecurityConfig {
                     // 🔹 AQUÍ VAN LAS URLs ESPECÍFICAS
                     config.setAllowedOrigins(List.of(
                             "https://porturnos.onrender.com",
-                            "por-turnos-ot6y.vercel.app",
-                            "http://localhost:5173/"
+                            "https://por-turnos-ot6y.vercel.app",
+                            "http://localhost:5173",
+                            "http://localhost:3000"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
@@ -67,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // OJO: si usas context-path /api en application-*.yml, LOS MATCHERS VAN SIN /api
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(clienteAuthProvider())

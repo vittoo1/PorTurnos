@@ -1,6 +1,8 @@
 import { Routes, Route, Outlet } from 'react-router-dom'
 import Header from './modules/layouts/Header'
 import Footer from './modules/layouts/Footer'
+import './debug-urls.js' // Debug para verificar URLs
+import './test-connection.js' // Test de conexión al backend
 import Home from './modules/home/pages/Home'
 import Blog from './modules/blogs/components/Blog'
 import Post from './modules/blogs/pages/Post'
